@@ -3,7 +3,8 @@
     <div class="container">
         <div class="row">
             <h1>Edit your link</h1>
-            <form action="update" method="post" id="edit-form">
+            <form action="{{ action('LinksController@update', ['id' => $link->id]) }}" method="POST" id="edit-form">
+                {!! method_field('PATCH') !!}
                 {!! csrf_field() !!}
                 <div class="form-group">
                     <label for="title">Title</label>
@@ -20,4 +21,7 @@
             </form>
         </div>
     </div>
+
+
+
 @endsection

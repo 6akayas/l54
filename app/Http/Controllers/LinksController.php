@@ -1,16 +1,35 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Link;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
+use Validator;
+use Response;
+use App\Link;
+use Auth;
+use View;
+
 
 class LinksController extends Controller
 {
+
+    protected $rules =
+        [
+            'title' => 'required|min:2|max:32|regex:/^[a-z ,.\'-]+$/i',
+            'url' => 'required'
+        ];
+
+
     public function index()
     {
         $links = Link::all();
         return view('links', ['links' => $links]);
+    }
+
+    public function show($id)
+    {
+        $link = Link::findOrFail($id);
+        return view('links.show', ['link' => $link ]);
     }
 
     public function create()
@@ -20,19 +39,14 @@ class LinksController extends Controller
 
     public function store(Request $request)
     {
-        $link = new Link;
-        $link->title = $request->title;
-        $link->url = $request->url;
-        $link->description = $request->description;
-        $link->save();
+        $this->validate($request, $this->rules);
 
-        return redirect('links');
-    }
-
-    public function show($id)
-    {
-        $link = Link::findOrFail($id);
-        return view('links.show', ['link' => $link ]);
+            $link = new Link;
+            $link->title = $request->title;
+            $link->url = $request->url;
+            $link->description = $request->description;
+            $link->save();
+            return response()->json($link);
     }
 
     public function edit($id)
@@ -41,13 +55,13 @@ class LinksController extends Controller
         return view('links.edit', ['link' => $link ]);
     }
 
-    public function update($id)
+    public function update($id, Request $request)
     {
         $link = Link::findOrFail($id);
-        $input = Request::all();
+        $input = $request->only(['title', 'url', 'description']);
         $link->update($input);
 
-        return view('links.show', ['link' => $link ]);
+        return view('links.show', ['link' => $link]);
     }
 
     public function destroy($id)

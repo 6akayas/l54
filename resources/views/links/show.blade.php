@@ -20,10 +20,8 @@
                 <td>{{ $link->title }}</td>
                 <td>{{ $link->url }}</td>
                 <td>{{$link->description}}</td>
-                <td><form action="../links/{{$link->id}}/edit">
-                        <input type="hidden" value="{{$link->id}}"/>
-                        <button type="submit" class="btn-default btn-md"> Edit</button>
-                    </form></td>
+                <td><a href="{{ action('LinksController@edit', ['id' => $link->id]) }}"><button type="submit" class="btn-default btn-md"> Edit</button></a>
+                    </td>
             </tr>
             </tbody>
         </table>

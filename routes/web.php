@@ -14,4 +14,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/users/{id}', 'UsersController@update_avatar');
 });
 
-Route::resource('links', 'LinksController');
+Route::group(['middleware' => 'auth'], function () {
+    Route::resource('links', 'LinksController');
+});
